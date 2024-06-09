@@ -40,6 +40,7 @@ export const deleteNotifications = async(req,res)=>{
 }
 //............End of deleteNotification controller..........
 
+//.......deleteoneNotification controllers.......................
 export const deleteOneNotification = async(req,res)=>{
     try{
         const notificationId = req.params.id;
@@ -61,3 +62,4 @@ export const deleteOneNotification = async(req,res)=>{
         res.status(500).json({error:error.message});
     }
 }
+//...........End of deleteoneNotifications controllers........................
