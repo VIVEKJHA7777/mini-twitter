@@ -234,7 +234,6 @@ export const getFollowingPosts= async(req,res)=>{
 //.........End of getFollowingPosts.............................
 
 //................getUsersPosts controllers..............................
-
 export const getUserPosts = async(req,res) =>{
   try{
     const { username } = req.params;
