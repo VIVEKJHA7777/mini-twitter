@@ -7,6 +7,8 @@ import RightPanel from './components/common/RightPanel';
 import NotificationPage from './pages/notification/NotificationPage';
 import ProfilePage from './pages/profile/ProfilePage';
 
+import { Toaster } from 'react-hot-toast';
+
 
 //...........wrap the application in Browser Route.............
 function App() {
@@ -22,6 +24,7 @@ function App() {
         <Route path='/profile/:username' element={<ProfilePage />} /> 
 			</Routes>
       <RightPanel/>
+	  <Toaster/>
 		</div>
 	);
 }
