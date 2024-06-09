@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 
+//generate token and pass the token in the cookie using jwt...
 export const generateTokenAndSetCookie = (userId,res)=>{
     //taking userId as payload
    const token= jwt.sign({userId},process.env.JWT_SECRET,{
