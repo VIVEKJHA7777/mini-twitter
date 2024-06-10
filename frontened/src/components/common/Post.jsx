@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import LoadingSpinner from "./LoadingSpinner";
+import { formatPostDate } from "../../utils/date";
 
 
 const Post = ({ post }) => {
@@ -21,9 +22,9 @@ const Post = ({ post }) => {
 	//for user ,that can can delete the post or not if user is not same as post user then 
 	//he cannot delete the post......
 	const isMyPost = authUser._id===post.user._id;
-	const formattedDate = "1h";
+	const formattedDate = formatPostDate(post.createdAt);
 
-	const isCommenting = false;
+	//const isCommenting = false;
 
 	const { mutate:deletePost,isPending:isDeleting } = useMutation({
           mutationFn: async ()=>{
@@ -85,12 +86,53 @@ const Post = ({ post }) => {
 		}
 	})
 
+	const { mutate: commentPost, isPending:isCommenting } = useMutation({
+		mutationFn: async()=>{
+			try{
+               const res= await fetch(`/api/posts/comment/${post._id}`,{
+				method: 'POST',
+				headers:{
+					"content-type": "application/json",
+				},
+				body: JSON.stringify({text:comment}),
+
+			})
+			const data= await res.json();
+			 if(!res.ok){
+				throw new Error(data.error ||" something went wrong");
+			 }
+			 return data;
+			}
+			catch(error){
+
+			}
+		},
+		onSuccess:(updatedComments)=>{
+			toast.success("comment posted successfully");
+			setComment("");
+			queryClient.setQueryData(["posts"],(oldData)=>{
+			console.log(post._id);
+			return oldData.map((p) =>{
+				if(p._id ===post._id){
+					return {...p,comments:updatedComments};
+				}
+				return p;
+			});
+		 });
+		},
+		onError:()=>{
+			toast.error(error.message);
+		},
+	})
+
 	const handleDeletePost = () => {
 		deletePost();
 	};
 
 	const handlePostComment = (e) => {
 		e.preventDefault();
+		if(isCommenting) return;
+		commentPost();
 	};
 
 	const handleLikePost = () => {
