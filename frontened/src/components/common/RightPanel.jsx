@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import RightPanelSkeleton from "../skeletons/RightPanelSkeleton";
 import { useQuery } from "@tanstack/react-query";
-import UseFollow from "../../hooks/UseFollow";
+import UseFollow from "../../hooks/useFollow";
 import LoadingSpinner from "./LoadingSpinner";
 
 const RightPanel = () => {
