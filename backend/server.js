@@ -11,46 +11,44 @@ import notificationsRoutes from './routes/notification.route.js';
 
 import connectMongoDB from './db/connectMongoDB.js';
 
-
 dotenv.config();
 
-//................CONFIG CLOUDINARY ACCOUNT.................
+// CONFIG CLOUDINARY ACCOUNT
 cloudinary.config({
-    cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
-    api_key:process.env.CLOUDINARY_API_KEY,
-    api_secret:process.env.CLOUDINARY_API_SECRET,
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const app= express();
+const app = express();
 const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();
 
-//........Middlewares.....
-app.use(express.json({limit:"5mb"}));  //to parse req body
-app.use(express.urlencoded({ extended:true })); // to parse form data
+// Middlewares
+app.use(express.json({ limit: "5mb" }));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-app.use(cookieParser()); // to parse the cookie from request
+// Authentication routes
+app.use("/api/auth", authRoutes);
 
-//...........authentication routes............
-app.use("/api/auth",authRoutes);
+// User routes
+app.use("/api/users", userRoutes);
 
-//..........user Routes........................
-app.use("/api/users",userRoutes);
+// Post routes
+app.use("/api/posts", postRoutes);
 
-//..........Post routes...........................
-app.use("/api/posts",postRoutes);
+// Notifications routes
+app.use("/api/notifications", notificationsRoutes);
 
-//..........Notifications Routes...................
-app.use("/api/notifications",notificationsRoutes);
-
-if(process.env.NODE_ENV === "production"){
-    app.use(express.static(path.join(__dirname,"/frontened/dist")));
-    app.get("*",(req,res)=>{
-        res.sendFile(path.resolve(__dirname,"frontened","dist","index.html"));
-    })
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "frontend", "dist")));
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+    });
 }
 
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     connectMongoDB();
-})
+});
